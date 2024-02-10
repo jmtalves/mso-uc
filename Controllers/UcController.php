@@ -59,9 +59,6 @@ class UcController
         $info = $this->checkInfo($params);
         if ($info) {
             $post = Request::getPostParams();
-            if (!empty($post['password'])) {
-                $post['password'] = Encrypt::encode($post['password']);
-            }
             $post = array_merge((array)$info[0], $post);
             $response = $this->save($post, $info[0]->iduc);
             if ($response) {
