@@ -2,7 +2,7 @@
 
 namespace Controllers;
 
-use Libraries\Encrypt;
+
 use Models\Uc;
 use Libraries\Response;
 use Libraries\Request;
@@ -11,13 +11,18 @@ class UcController
 {
     /**
      * index
+     * @param  array $params
      *
      * @return void
      */
-    public function index()
+    public function index(array $params = [])
     {
         Request::verifyToken([0]);
-        $info = Uc::find("*");
+        $filter = [];
+        if (!empty($params[0])) {
+            $filter["code"] = $params[0];
+        }
+        $info = Uc::find("*", $filter);
         if (empty($info)) {
             Response::sendResponse(200, ["msg" => "No Ucs Found", "info" => []]);
         }
@@ -26,10 +31,11 @@ class UcController
 
     /**
      * insert
+     * @param  array $params
      *
      * @return void
      */
-    public function insert()
+    public function insert(array $params = [])
     {
         Request::verifyToken([0]);
         $post = Request::getPostParams();
