@@ -33,24 +33,18 @@ jobs:
         run: composer install
 
 
-      - name: Tag and Push Memcached image
-        run: |
-          docker tag memcached:alpine jmtalves/mso-user:memcached
-          docker push jmtalves/mso-user:memcached
-        working-directory: ./
-
       - name: Tag and Push Nginx image
         run: |
-          docker tag nginx:alpine jmtalves/mso-user:nginx
-          docker build  -f ./phpdocker/nginx/Dockerfile -t jmtalves/mso-user:nginx .
-          docker push jmtalves/mso-user:nginx
+          docker tag nginx:alpine jmtalves/mso-uc:nginx
+          docker build  -f ./phpdocker/nginx/Dockerfile -t jmtalves/mso-uc:nginx .
+          docker push jmtalves/mso-uc:nginx
         working-directory: ./
 
 
       - name: Tag and Push PHP-FPM image
         working-directory: ./
         run: |
-          docker tag mso-users_php-fpm:latest jmtalves/mso-user:php-fpm
-          docker build  -f ./phpdocker/php-fpm/Dockerfile -t jmtalves/mso-user:php-fpm . 
-          docker push jmtalves/mso-user:php-fpm
+          docker tag mso-uc_php-fpm:latest jmtalves/mso-uc:php-fpm
+          docker build  -f ./phpdocker/php-fpm/Dockerfile -t jmtalves/mso-uc:php-fpm . 
+          docker push jmtalves/mso-uc:php-fpm
         
