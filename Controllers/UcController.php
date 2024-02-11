@@ -2,10 +2,10 @@
 
 namespace Controllers;
 
-
 use Models\Uc;
 use Libraries\Response;
 use Libraries\Request;
+use Libraries\MessageBroker;
 
 class UcController
 {
@@ -47,6 +47,14 @@ class UcController
         }
         $response = $this->save($post);
         if ($response) {
+            MessageBroker::sendMessage(
+                "ucCreate",
+                [
+                    "iduc" => $response,
+                    "code" => $post['code'],
+                    "name" => $post['name']
+                ]
+            );
             Response::sendResponse(200, ["msg" => "Inserted Success", "id" => $response]);
         } else {
             Response::sendResponse(422, ["msg" => "Error on insert record"]);
@@ -68,6 +76,14 @@ class UcController
             $post = array_merge((array)$info[0], $post);
             $response = $this->save($post, $info[0]->iduc);
             if ($response) {
+                MessageBroker::sendMessage(
+                    "ucUpdate",
+                    [
+                        "iduc" => $info[0]->iduc,
+                        "code" => $post['code'],
+                        "name" => $post['name']
+                    ]
+                );
                 Response::sendResponse(200, ["msg" => "Updated Success"]);
             } else {
                 Response::sendResponse(422, ["msg" => "Error on updated record"]);
@@ -133,6 +149,12 @@ class UcController
         $uc_class = new Uc();
         $uc_class->iduc = $us[0]->iduc;
         if ($uc_class->delete()) {
+            MessageBroker::sendMessage(
+                "ucDelete",
+                [
+                    "iduc" => $us[0]->iduc
+                ]
+            );
             Response::sendResponse(200, ["msg" => "Delete Success"]);
         } else {
             Response::sendResponse(422, ["msg" => "Error on delete record"]);
